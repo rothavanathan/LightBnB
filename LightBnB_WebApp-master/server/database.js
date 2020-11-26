@@ -106,14 +106,19 @@ const getAllProperties = function(options, limit = 10) {
   // 3
   if (options.city) {
     queryParams.push(`%${options.city}%`);
-    queryString += `WHERE city LIKE $${queryParams.length} `;
+    queryString += `${queryParams.length > 1 ? 'AND ' : 'WHERE'} city LIKE $${queryParams.length} `;
   }
 
   if (options.owner_id) {
-    queryParams.push(`%${options.owner_id}%`);
-    queryString += `WHERE owner_id = $${queryParams.length} `;
+    queryParams.push(`${options.owner_id}`);
+    queryString += `${queryParams.length > 1 ? 'AND ' : 'WHERE '}owner_id = $${queryParams.length} `;
   }
 
+
+  if (options.minimum_rating) {
+    queryParams.push(`${options.minimum_rating}`);
+    queryString += `${queryParams.length > 1 ? 'AND ' : 'WHERE'} rating >= $${queryParams.length} `;
+  }
   // 4
   queryParams.push(limit);
   queryString += `
